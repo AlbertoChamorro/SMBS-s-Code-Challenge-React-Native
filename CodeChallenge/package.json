@@ -7,10 +7,11 @@
   "author": "@AlbertoChamorro",
   "license": "MIT",
   "scripts": {
+    "init": "yarn",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -30,6 +31,7 @@
     "react-test-renderer": "16.13.1"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "testEnvironment": "node"
   }
 }
