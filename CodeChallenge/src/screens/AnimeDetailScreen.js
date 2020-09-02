@@ -1,20 +1,36 @@
+// Native Components
 import React from 'react';
-import { View, Text, Button } from 'react-native';
-import Header from '../components/Header';
 
-function AnimeDetailScreen({ route, navigation }) {
-    const { animeId } = route.params;
+// Components
+import Header from '../components/Header';
+import AnimeDetail from '../components/AnimeDetail';
+
+class AnimeDetailScreen extends React.Component {
+
+  state = {
+    isLoading: true,
+    animes: []
+  };
+
+  constructor(props) {
+    super(props)
+    this._isMounted = false;
+  }
+
+  render() {
+
+    // { route, navigation }
+    // const { animeId } = route.params;
+    //  {JSON.stringify(animeId)} | navigation.goBack()
+
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <React.Fragment>
         <Header />
-        <Text>Details Screen</Text>
-        <Text>animeId: {JSON.stringify(animeId)}</Text>
-        <Button
-          title="Go to Home"
-          onPress={() => navigation.goBack()}
-        />
-      </View>
+        <AnimeDetail />
+      </React.Fragment>
     );
   }
+
+}
 
 export default AnimeDetailScreen;
