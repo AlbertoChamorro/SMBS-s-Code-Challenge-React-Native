@@ -1,5 +1,5 @@
 import http from 'axios';
-import appConfig from './config';
+import appConfig from './ApiConfig';
 
 const httpManagerService = http.create({
   baseURL: appConfig.API_URL,
