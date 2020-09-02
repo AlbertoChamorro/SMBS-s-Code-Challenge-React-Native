@@ -13,7 +13,7 @@ Basado en la plataforma ya sea Mac OSX o Windows que te encuentres sigue la guí
 
 1. Xcode [Descarga](https://developer.apple.com/xcode/downloads/)
 2. Android Studio [Descarga](https://developer.android.com/studio)
-3. NodeJS [Descarga](https://nodejs.org/es/)  ó `brew install node` para Mac OSX
+3. NodeJS [Descarga](https://nodejs.org/es/) ó `brew install node` para Mac OSX
 4. Watchman [Descarga](https://facebook.github.io/watchman/docs/install.html) ó `brew install watchman` para Mac OSX
 
 ### Dependencias utilizadas
@@ -24,17 +24,20 @@ El proyecto utiliza las siguientes dependencias
 2. Props Types [Doc](https://github.com/facebook/prop-types)
 3. React Navigation [Doc](https://reactnavigation.org/docs/getting-started/)
 4. React Native Elements [Doc](https://react-native-elements.github.io/react-native-elements/docs/)
+5. MomentJs [Doc](https://momentjs.com/)
 
 ### Inicio
 
 Para correr la app sigue los siguientes pasos:
 
 1. Instala las dependencias necesarias del proyecto incluidas en el package.json:
+
 ```
 yarn install
 ó
 npm run init
 ```
+
 2. Ejecuta el comando `npm run ios` ó `npm run android` según la plataforma a probar.
 3. Verifica que tengas el emulador ejecutandose según la plataforma. En caso de ser necesario puedes usar el comando `npm run start`
 

@@ -54,4 +54,28 @@ describe('getAnimeDetail', () => {
     expect(anime.attributes.titles).not.toBeNull();
     expect(anime.attributes.titles.en).not.toBeNull();
   });
+
+  test('genres by anime', async () => {
+    let animeId = 40909;
+    let results = await animeService.getGenresByAnime(animeId);
+    expect(results).not.toBeNull();
+    expect(Array.isArray(results)).toBeTruthy();
+    for (const index in results) {
+      expect(results[index].type).toMatch(/genres/);
+      expect(results[index].attributes).not.toBeNull();
+      expect(results[index].attributes.name).not.toBeNull();
+    }
+  });
+
+  test('episodes by anime', async () => {
+    let animeId = 40909;
+    let results = await animeService.getEpisodesByAnime(animeId);
+    expect(results).not.toBeNull();
+    expect(Array.isArray(results)).toBeTruthy();
+    for (const index in results) {
+      expect(results[index].type).toMatch(/episodes/);
+      expect(results[index].attributes).not.toBeNull();
+      expect(results[index].attributes.number).not.toBeNull();
+    }
+  });
 });
