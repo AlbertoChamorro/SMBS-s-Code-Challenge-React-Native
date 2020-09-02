@@ -8,6 +8,7 @@ import placeholderImage from '../assets/placeholder.png'
 // Components
 import FieldKeyLayout from '../components/FieldKeyLayout';
 import FieldKeyText from '../components/FieldKeyText';
+import Genres from '../components/containers/GenresList';
 
 // Utils
 import DateUtils from '../utils/DateUtil';
@@ -53,7 +54,7 @@ function AnimeDetail(props) {
                             <FieldKeyText value={attributes.canonicalTitle || 'xxxx'} />
                         </FieldKeyLayout>
                         <FieldKeyLayout style={styles.formGroup} title={'Type'}>
-                            <FieldKeyText value={`${attributes.subtype}, ${attributes.episodeLength.toString()}`} />
+                            <FieldKeyText value={`${attributes.subtype}, ${(attributes.episodeLength || 0).toString()}`} />
                         </FieldKeyLayout>
                         <FieldKeyLayout style={styles.formGroup} title={'Year'}>
                             <FieldKeyText value={`${startDate} till ${endDate}`} />
@@ -63,7 +64,9 @@ function AnimeDetail(props) {
 
                 <View style={{ marginTop: 16, marginBottom: 6 }}>
                     <FieldKeyLayout style={styles.formGroup} title={'Genres'}>
-                        <FieldKeyText value={'Genres List'} />
+                        <View style={{ marginTop: 8 }}>
+                            <Genres list={props.genres} />
+                        </View>
                     </FieldKeyLayout>
                 </View>
 
@@ -83,7 +86,7 @@ function AnimeDetail(props) {
                 <View style={[styles.containerRow, { justifyContent: 'space-between' }]}>
                     <View style={{ flex: 5 }}>
                         <FieldKeyLayout style={styles.formGroup} title={'Episode Duration'}>
-                            <FieldKeyText value={attributes.episodeCount.toString() || 'xxxx'} />
+                            <FieldKeyText value={(attributes.episodeCount || 0).toString() || 'xxxx'} />
                         </FieldKeyLayout>
                     </View>
                     <View style={{ flex: 5 }}>
@@ -103,7 +106,16 @@ function AnimeDetail(props) {
     );
 }
 
-// ToDO: query genres and episodes
+AnimeDetail.defaultProps = {
+    anime: {
+        attributes: {
+            titles: {},
+            episodeCount: 0,
+            episodeLength: 0,
+        }
+    }
+}
+
 AnimeDetail.propTypes = {
     anime: PropTypes.object,
     anime: PropTypes.shape({
@@ -117,7 +129,7 @@ AnimeDetail.propTypes = {
             }),
             canonicalTitle: PropTypes.string.isRequired,
             episodeCount: PropTypes.number.isRequired,
-            youtubeVideoId: PropTypes.string.isRequired,
+            // youtubeVideoId: PropTypes.string.isRequired,
             episodeLength: PropTypes.number.isRequired,
             coverImage: PropTypes.object,
             coverImage: PropTypes.shape({
