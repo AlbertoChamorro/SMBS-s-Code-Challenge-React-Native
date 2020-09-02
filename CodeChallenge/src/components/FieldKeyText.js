@@ -16,6 +16,7 @@ FieldKeyText.propTypes = {
 
 let styles = StyleSheet.create({
     value: {
+        margin: 2,
         fontSize: 15
     }
 });

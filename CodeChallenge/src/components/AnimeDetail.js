@@ -1,35 +1,62 @@
 // Native Components
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Badge } from 'react-native-elements';
 import { StyleSheet, View, Image, TouchableWithoutFeedback, ScrollView } from 'react-native';
+import placeholderImage from '../assets/placeholder.png'
 
 // Components
 import FieldKeyLayout from '../components/FieldKeyLayout';
 import FieldKeyText from '../components/FieldKeyText';
 
+// Utils
+import DateUtils from '../utils/DateUtil';
+
+function AnimeDetailStatus(status) {
+    let newStatusBadge = '';
+    switch (status) {
+        case 'tba', 'upcoming':
+            newStatusBadge = 'primary';
+        case 'current':
+            newStatusBadge = 'success';
+        case 'upcoming':
+            newStatusBadge = 'warning';
+        default:
+            newStatusBadge = 'error';
+    }
+    return <Badge value={status.toUpperCase() || 'xxxx'} status={newStatusBadge} containerStyle={styles.badge} />
+}
+
 function AnimeDetail(props) {
 
-    const { item } = props;
-    console.log(item);
+    const { anime } = props;
+    const { attributes } = anime;
+
+    let imageUrl = attributes.coverImage && attributes.coverImage.original;
+    let image = imageUrl ? { uri: imageUrl } : placeholderImage;
+
+    let startDate = DateUtils.toDate(attributes.startDate, DateUtils.DATE_MONTH_FORMAT).toString();
+    let endDate = DateUtils.toDate(attributes.endDate, DateUtils.DATE_MONTH_FORMAT).toString();
 
     return (
         <ScrollView>
             <View style={styles.containerColumn}>
                 <View style={[styles.containerRow]}>
                     <View style={{ flex: 4 }}>
-                        <Image resizeMode="cover" style={styles.cover} source={require('../assets/placeholder.png')} />
+                        <Image resizeMode="cover" style={styles.cover} source={image} />
                     </View>
-                    <View style={{ flex: 6, justifyContent: 'space-between' }}>
+                    <View style={{ flex: 6, justifyContent: 'space-between', paddingStart: 8 }}>
                         <FieldKeyLayout style={styles.formGroup} title={'Main Title'}>
-                            <FieldKeyText value={'Anime Title'} />
+                            <FieldKeyText value={attributes.titles.en || 'xxxx'} />
                         </FieldKeyLayout>
                         <FieldKeyLayout style={styles.formGroup} title={'Canonical Title'}>
-                            <FieldKeyText value={'Canonical Title'} />
+                            <FieldKeyText value={attributes.canonicalTitle || 'xxxx'} />
                         </FieldKeyLayout>
                         <FieldKeyLayout style={styles.formGroup} title={'Type'}>
-                            <FieldKeyText value={'Show Type, Number Episodes'} />
+                            <FieldKeyText value={`${attributes.subtype}, ${attributes.episodeLength.toString()}`} />
                         </FieldKeyLayout>
                         <FieldKeyLayout style={styles.formGroup} title={'Year'}>
-                            <FieldKeyText value={'Start Date till End Date'} />
+                            <FieldKeyText value={`${startDate} till ${endDate}`} />
                         </FieldKeyLayout>
                     </View>
                 </View>
@@ -43,12 +70,12 @@ function AnimeDetail(props) {
                 <View style={[styles.containerRow, { justifyContent: 'space-between' }]}>
                     <View style={{ flex: 5 }}>
                         <FieldKeyLayout style={styles.formGroup} title={'Average Rating'}>
-                            <FieldKeyText value={'Rating'} />
+                            <FieldKeyText value={attributes.averageRating || 'xxxx'} />
                         </FieldKeyLayout>
                     </View>
                     <View style={{ flex: 5 }}>
                         <FieldKeyLayout style={styles.formGroup} title={'Age Rating'}>
-                            <FieldKeyText value={'Rating'} />
+                            <FieldKeyText value={attributes.ageRating || 'xxxx'} />
                         </FieldKeyLayout>
                     </View>
                 </View>
@@ -56,38 +83,56 @@ function AnimeDetail(props) {
                 <View style={[styles.containerRow, { justifyContent: 'space-between' }]}>
                     <View style={{ flex: 5 }}>
                         <FieldKeyLayout style={styles.formGroup} title={'Episode Duration'}>
-                            <FieldKeyText value={'Duration'} />
+                            <FieldKeyText value={attributes.episodeCount.toString() || 'xxxx'} />
                         </FieldKeyLayout>
                     </View>
                     <View style={{ flex: 5 }}>
                         <FieldKeyLayout style={styles.formGroup} title={'Airing Status'}>
-                            <FieldKeyText value={'Status'} />
-                        </FieldKeyLayout>
-                    </View>
-                </View>
-
-                <View style={[styles.containerRow, { justifyContent: 'space-between' }]}>
-                    <View style={{ flex: 5 }}>
-                        <FieldKeyLayout style={styles.formGroup} title={'Average Rating'}>
-                            <FieldKeyText value={'Rating'} />
-                        </FieldKeyLayout>
-                    </View>
-                    <View style={{ flex: 5 }}>
-                        <FieldKeyLayout style={styles.formGroup} title={'Age Rating'}>
-                            <FieldKeyText value={'Rating'} />
+                            {AnimeDetailStatus(attributes.status)}
                         </FieldKeyLayout>
                     </View>
                 </View>
 
                 <View style={{ marginTop: 16 }}>
                     <FieldKeyLayout style={styles.formGroup} title={'Synopsis'}>
-                        <FieldKeyText value={'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'} />
+                        <FieldKeyText value={attributes.synopsis || 'xxxx'} />
                     </FieldKeyLayout>
                 </View>
             </View>
         </ScrollView>
     );
 }
+
+// ToDO: query genres and episodes
+AnimeDetail.propTypes = {
+    anime: PropTypes.object,
+    anime: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['anime']),
+        attributes: PropTypes.object,
+        attributes: PropTypes.shape({
+            titles: PropTypes.object,
+            titles: PropTypes.shape({
+                en: PropTypes.string,
+            }),
+            canonicalTitle: PropTypes.string.isRequired,
+            episodeCount: PropTypes.number.isRequired,
+            youtubeVideoId: PropTypes.string.isRequired,
+            episodeLength: PropTypes.number.isRequired,
+            coverImage: PropTypes.object,
+            coverImage: PropTypes.shape({
+                original: PropTypes.string,
+            }),
+            ageRating: PropTypes.oneOf(['G', 'PG', 'R', 'R18']),
+            subtype: PropTypes.oneOf(['ONA', 'OVA', 'TV', 'movie', 'music', 'special']),
+            status: PropTypes.oneOf(['current', 'finished', 'tba', 'unreleased', 'upcoming']),
+            averageRating: PropTypes.string.isRequired,
+            startDate: PropTypes.string.isRequired,
+            endDate: PropTypes.string.isRequired,
+            synopsis: PropTypes.string.isRequired,
+        })
+    }),
+};
 
 const styles = StyleSheet.create({
     containerColumn: {
@@ -104,6 +149,7 @@ const styles = StyleSheet.create({
     },
     cover: {
         flex: 1,
+        borderRadius: 7,
         width: null,
         height: null
     },
@@ -111,6 +157,11 @@ const styles = StyleSheet.create({
         marginStart: 4,
         marginTop: 2,
         marginBottom: 4
+    },
+    badge: {
+        flex: 1,
+        marginTop: 4,
+        alignSelf: 'flex-start',
     }
 });
 

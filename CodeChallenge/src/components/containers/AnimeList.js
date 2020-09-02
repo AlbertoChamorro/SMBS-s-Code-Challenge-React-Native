@@ -27,7 +27,7 @@ class Animes extends React.Component {
 
     onSelectedItem = id => {
         console.log(id);
-        this.props.navigation.push('AnimeDetail', {
+        this.props.navigation.navigate('AnimeDetail', {
             animeId: parseInt(id)
         })
     };

@@ -13,7 +13,7 @@
   "scripts": {
     "install:js": "yarn",
     "install:ios": "npx pod-install ios",
-    "install": "npm-run-all install:*",
+    "init": "npm-run-all install:*",
     "reinstall": "rm -rf node_modules && yarn",
     "clean:ios": "rm -rf ios/build",
     "clean:android": "rm -rf android/build && rm -rf android/app/build",
@@ -31,6 +31,7 @@
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
     "axios": "^0.20.0",
+    "moment": "^2.27.0",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-native": "0.63.2",
