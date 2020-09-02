@@ -25,6 +25,7 @@ El proyecto utiliza las siguientes dependencias
 3. React Navigation [Doc](https://reactnavigation.org/docs/getting-started/)
 4. React Native Elements [Doc](https://react-native-elements.github.io/react-native-elements/docs/)
 5. MomentJs [Doc](https://momentjs.com/)
+6. Read More Text [Doc] (https://www.npmjs.com/package/react-native-read-more-text)
 
 ### Inicio
 
