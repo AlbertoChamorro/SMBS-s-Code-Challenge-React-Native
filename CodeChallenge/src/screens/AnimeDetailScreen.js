@@ -14,7 +14,8 @@ class AnimeDetailScreen extends React.Component {
   state = {
     isLoading: true,
     anime: {},
-    genres: []
+    genres: [],
+    episodes: []
   };
 
   constructor(props) {
@@ -32,6 +33,7 @@ class AnimeDetailScreen extends React.Component {
       const { animeId } = this.props.route.params;
       this.getAnime(animeId);
       this.getGenreByAnime(animeId);
+      this.getEpisodesByAnime(animeId);
     }
   }
 
@@ -53,12 +55,20 @@ class AnimeDetailScreen extends React.Component {
     });
   }
 
+  getEpisodesByAnime = async (id) => {
+    this.setState({ isLoading: true });
+    let result = await animeService.getEpisodesByAnime(id);
+    this.setState({
+      episodes: result,
+      isLoading: false
+    });
+  }
 
   render() {
 
     let component;
     if (this._isMounted && !this.state.isLoading) {
-      component = <AnimeDetail anime={this.state.anime} genres={this.state.genres} />;
+      component = <AnimeDetail anime={this.state.anime} genres={this.state.genres} episodes={this.state.episodes} />;
     } else {
       component = <ActivityIndicator />
     }

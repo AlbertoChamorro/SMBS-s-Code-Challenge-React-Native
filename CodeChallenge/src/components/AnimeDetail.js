@@ -9,6 +9,7 @@ import placeholderImage from '../assets/placeholder.png'
 import FieldKeyLayout from '../components/FieldKeyLayout';
 import FieldKeyText from '../components/FieldKeyText';
 import Genres from '../components/containers/GenresList';
+import Episodes from '../components/containers/EpisodesList';
 
 // Utils
 import DateUtils from '../utils/DateUtil';
@@ -98,7 +99,15 @@ function AnimeDetail(props) {
 
                 <View style={{ marginTop: 16 }}>
                     <FieldKeyLayout style={styles.formGroup} title={'Synopsis'}>
-                        <FieldKeyText value={attributes.synopsis || 'xxxx'} />
+                        <FieldKeyText showMoreText={true} value={attributes.synopsis || 'xxxx'} />
+                    </FieldKeyLayout>
+                </View>
+
+                <View style={{ marginTop: 16, marginBottom: 6 }}>
+                    <FieldKeyLayout style={styles.formGroup} title={'Episodes'}>
+                        <View style={{ marginTop: 8 }}>
+                            <Episodes list={props.episodes} />
+                        </View>
                     </FieldKeyLayout>
                 </View>
             </View>
