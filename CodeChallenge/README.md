@@ -21,6 +21,9 @@ Basado en la plataforma ya sea Mac OSX o Windows que te encuentres sigue la guí
 El proyecto utiliza las siguientes dependencias
 
 1. Axios Http Client [Doc](https://github.com/axios/axios)
+2. Props Types [Doc](https://github.com/facebook/prop-types)
+3. React Navigation [Doc](https://reactnavigation.org/docs/getting-started/)
+4. React Native Elements [Doc](https://react-native-elements.github.io/react-native-elements/docs/)
 
 ### Inicio
 
