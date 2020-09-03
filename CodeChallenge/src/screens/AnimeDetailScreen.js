@@ -1,15 +1,16 @@
 // Native Components
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Linking } from 'react-native';
 
 // Components
+import BaseComponent from '../components/base/BaseComponent';
 import Header from '../components/Header';
 import AnimeDetail from '../components/AnimeDetail';
 
 // Services
 import animeService from '../services/AnimeService';
 
-class AnimeDetailScreen extends React.Component {
+class AnimeDetailScreen extends BaseComponent {
 
   state = {
     isLoading: true,
@@ -64,11 +65,37 @@ class AnimeDetailScreen extends React.Component {
     });
   }
 
-  render() {
+  async playVideo(id) {
+    if (!id || id == 0) {
+      console.error('Invalid youtube id!!')
+      super.createDialog('Error', 'Invalid youtube id!!', {
+        showOkButton: true
+      });
+      return;
+    }
 
+    let url = `youtube://${id}`;
+    let supported = await Linking.canOpenURL(url)
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      await Linking.openURL(`https://www.youtube.com/watch?v=${id}`);
+    }
+  }
+
+  async sharedAnime(data) {
+    super.shareData(`We are pleased to share with you the ${data.name} series of the ${data.subtype} category`);
+  }
+
+  render() {
     let component;
     if (this._isMounted && !this.state.isLoading) {
-      component = <AnimeDetail anime={this.state.anime} genres={this.state.genres} episodes={this.state.episodes} />;
+      component = <AnimeDetail anime={this.state.anime}
+        genres={this.state.genres}
+        episodes={this.state.episodes}
+        onPlayVideo={this.playVideo}
+        onSharedAnime={this.sharedAnime}
+      />;
     } else {
       component = <ActivityIndicator />
     }

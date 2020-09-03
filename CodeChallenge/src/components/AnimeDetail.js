@@ -1,9 +1,13 @@
 // Native Components
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Badge } from 'react-native-elements';
-import { StyleSheet, View, Image, TouchableWithoutFeedback, ScrollView } from 'react-native';
-import placeholderImage from '../assets/placeholder.png'
+import { Badge, Icon } from 'react-native-elements';
+import { View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import placeholderImage from '../assets/placeholder.png';
+import { useNavigation } from '@react-navigation/native';
+
+// Styles
+import styles from './styles/AnimeDetail';
 
 // Components
 import FieldKeyLayout from '../components/FieldKeyLayout';
@@ -29,12 +33,36 @@ function AnimeDetailStatus(status) {
     return <Badge value={status.toUpperCase() || 'xxxx'} status={newStatusBadge} containerStyle={styles.badge} />
 }
 
+function setMenu(props) {
+    const navigation = useNavigation();
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: (_) => (
+                <TouchableOpacity activeOpacity={0.85}
+                    onPress={() => props.onSharedAnime({
+                        name: props.anime.attributes.canonicalTitle,
+                        subtype: props.anime.attributes.subtype
+                    })}>
+                    <Icon
+                        type='font-awesome'
+                        name="share-alt"
+                        style={{ marginRight: 8 }}
+                        underlayColor={'#64b5f6'}
+                    />
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
+}
+
 function AnimeDetail(props) {
 
-    const { anime } = props;
-    const { attributes } = anime;
+    const { attributes } = props.anime;
 
-    let imageUrl = attributes.coverImage && attributes.coverImage.original;
+    if (!attributes) return null;
+    setMenu(props);
+
+    let imageUrl = attributes.posterImage && attributes.posterImage.original;
     let image = imageUrl ? { uri: imageUrl } : placeholderImage;
 
     let startDate = DateUtils.toDate(attributes.startDate, DateUtils.DATE_MONTH_FORMAT).toString();
@@ -45,7 +73,16 @@ function AnimeDetail(props) {
             <View style={styles.containerColumn}>
                 <View style={[styles.containerRow]}>
                     <View style={{ flex: 4 }}>
-                        <Image resizeMode="cover" style={styles.cover} source={image} />
+                        <TouchableOpacity activeOpacity={0.85} onPress={() => {
+                            props.onPlayVideo(attributes.youtubeVideoId)
+                        }}>
+                            <View style={{ flex: 1 }}>
+                                <Image resizeMode="cover" style={styles.cover} source={image} />
+                                <View style={styles.overlay}>
+                                    <Icon name='play' type='font-awesome' color="#fff" />
+                                </View>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={{ flex: 6, justifyContent: 'space-between', paddingStart: 8 }}>
                         <FieldKeyLayout style={styles.formGroup} title={'Main Title'}>
@@ -55,7 +92,7 @@ function AnimeDetail(props) {
                             <FieldKeyText value={attributes.canonicalTitle || 'xxxx'} />
                         </FieldKeyLayout>
                         <FieldKeyLayout style={styles.formGroup} title={'Type'}>
-                            <FieldKeyText value={`${attributes.subtype}, ${(attributes.episodeLength || 0).toString()}`} />
+                            <FieldKeyText value={`${attributes.subtype}, ${(attributes.episodeLength || 0).toString()} episodes`} />
                         </FieldKeyLayout>
                         <FieldKeyLayout style={styles.formGroup} title={'Year'}>
                             <FieldKeyText value={`${startDate} till ${endDate}`} />
@@ -87,7 +124,7 @@ function AnimeDetail(props) {
                 <View style={[styles.containerRow, { justifyContent: 'space-between' }]}>
                     <View style={{ flex: 5 }}>
                         <FieldKeyLayout style={styles.formGroup} title={'Episode Duration'}>
-                            <FieldKeyText value={(attributes.episodeCount || 0).toString() || 'xxxx'} />
+                            <FieldKeyText value={`${(attributes.episodeCount || 0)} min` || 'xxxx'} />
                         </FieldKeyLayout>
                     </View>
                     <View style={{ flex: 5 }}>
@@ -117,6 +154,7 @@ function AnimeDetail(props) {
 
 AnimeDetail.defaultProps = {
     anime: {
+        id: "0",
         attributes: {
             titles: {},
             episodeCount: 0,
@@ -128,7 +166,7 @@ AnimeDetail.defaultProps = {
 AnimeDetail.propTypes = {
     anime: PropTypes.object,
     anime: PropTypes.shape({
-        id: PropTypes.string.isRequired,
+        id: PropTypes.string,
         type: PropTypes.oneOf(['anime']),
         attributes: PropTypes.object,
         attributes: PropTypes.shape({
@@ -138,52 +176,19 @@ AnimeDetail.propTypes = {
             }),
             canonicalTitle: PropTypes.string.isRequired,
             episodeCount: PropTypes.number.isRequired,
-            // youtubeVideoId: PropTypes.string.isRequired,
-            episodeLength: PropTypes.number.isRequired,
-            coverImage: PropTypes.object,
-            coverImage: PropTypes.shape({
-                original: PropTypes.string,
-            }),
+            youtubeVideoId: PropTypes.string,
+            episodeLength: PropTypes.number,
             ageRating: PropTypes.oneOf(['G', 'PG', 'R', 'R18']),
             subtype: PropTypes.oneOf(['ONA', 'OVA', 'TV', 'movie', 'music', 'special']),
             status: PropTypes.oneOf(['current', 'finished', 'tba', 'unreleased', 'upcoming']),
             averageRating: PropTypes.string.isRequired,
             startDate: PropTypes.string.isRequired,
             endDate: PropTypes.string.isRequired,
-            synopsis: PropTypes.string.isRequired,
+            synopsis: PropTypes.string.isRequired
         })
     }),
+    onPlayVideo: PropTypes.func,
+    onSharedAnime: PropTypes.func
 };
-
-const styles = StyleSheet.create({
-    containerColumn: {
-        padding: 16,
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignContent: 'stretch',
-        flex: 1
-    },
-    containerRow: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignContent: 'stretch'
-    },
-    cover: {
-        flex: 1,
-        borderRadius: 7,
-        width: null,
-        height: null
-    },
-    formGroup: {
-        marginStart: 4,
-        marginTop: 2,
-        marginBottom: 4
-    },
-    badge: {
-        flex: 1,
-        marginTop: 4,
-        alignSelf: 'flex-start',
-    }
-});
 
 export default AnimeDetail;
