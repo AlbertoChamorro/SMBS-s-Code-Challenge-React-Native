@@ -75,10 +75,14 @@ class AnimeDetailScreen extends BaseComponent {
     }
 
     let url = `youtube://${id}`;
-    let supported = await Linking.canOpenURL(url)
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
+    try {
+      let supported = await Linking.canOpenURL(url)
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        await Linking.openURL(`https://www.youtube.com/watch?v=${id}`);
+      }
+    } catch (e) {
       await Linking.openURL(`https://www.youtube.com/watch?v=${id}`);
     }
   }
