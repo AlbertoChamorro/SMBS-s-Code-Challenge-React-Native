@@ -33,7 +33,7 @@ FieldKeyText.defaultProps = {
 
 const renderTruncatedFooter = (handlePress) => {
     return (
-        <Text style={{ color: '#1565C0', marginTop: 5 }} onPress={handlePress}>
+        <Text style={{ color: '#3379ca', marginTop: 5 }} onPress={handlePress}>
             Read more
         </Text>
     );
@@ -41,7 +41,7 @@ const renderTruncatedFooter = (handlePress) => {
 
 const renderRevealedFooter = (handlePress) => {
     return (
-        <Text style={{ color: '#1565C0', marginTop: 5 }} onPress={handlePress}>
+        <Text style={{ color: '#3379ca', marginTop: 5 }} onPress={handlePress}>
             Show less
         </Text>
     );

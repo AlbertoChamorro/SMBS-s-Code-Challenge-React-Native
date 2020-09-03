@@ -1,8 +1,8 @@
 const configs = {
     headerStyle: {
-        // backgroundColor: '#1565C0',
+        backgroundColor: '#3379ca',
     },
-    // headerTintColor: '#fff',
+    headerTintColor: '#fff',
     headerTitleStyle: {
         fontWeight: 'bold',
     }

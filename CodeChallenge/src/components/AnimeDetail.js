@@ -44,6 +44,7 @@ function setMenu(props) {
                         subtype: props.anime.attributes.subtype
                     })}>
                     <Icon
+                        color='#fff'
                         type='font-awesome'
                         name="share-alt"
                         style={{ marginRight: 8 }}
